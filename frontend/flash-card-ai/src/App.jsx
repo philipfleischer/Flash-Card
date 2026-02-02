@@ -1,19 +1,20 @@
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import LoginPage from './pages/Auth/LoginPage';
-import RegisterPage from './pages/Auth/RegisterPage';
-import DashboardPage from './pages/Dashboard/DashboardPage';
-import DocumentListPage from './pages/Documents/DocumentListPage';
-import FlashcardsListPage from './pages/Flashcards/FlashcardListPage';
-import FlashcardPage from './pages/Flashcards/FlashcardPage';
-import NotFoundPage from './pages/NotFoundPage';
-import ProfilePage from './pages/Profile/ProfilePage';
-import QuizResultPage from './pages/Quizzes/QuizResultPage';
-import QuizTakePage from './pages/Quizzes/QuizTakePage';
+import ProtectedRoute from './components/auth/ProtectedRoute.jsx';
+import { useAuth } from './context/AuthContext.jsx';
+import LoginPage from './pages/Auth/LoginPage.jsx';
+import RegisterPage from './pages/Auth/RegisterPage.jsx';
+import DashboardPage from './pages/Dashboard/DashboardPage.jsx';
+import DocumentDetailPage from './pages/Documents/DocumentDetailPage.jsx';
+import DocumentListPage from './pages/Documents/DocumentListPage.jsx';
+import FlashcardsListPage from './pages/Flashcards/FlashcardListPage.jsx';
+import FlashcardPage from './pages/Flashcards/FlashcardPage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
+import ProfilePage from './pages/Profile/ProfilePage.jsx';
+import QuizResultPage from './pages/Quizzes/QuizResultPage.jsx';
+import QuizTakePage from './pages/Quizzes/QuizTakePage.jsx';
 
 const App = () => {
-  const isAuthenticated = false;
-  const loading = false;
+  const { isAuthenticated, loading } = useAuth();
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">

@@ -1,6 +1,11 @@
 import express from 'express';
 import upload from '../config/multer.js';
-import { deleteDocument, getDocument, getDocuments } from '../controllers/documentController.js';
+import {
+  deleteDocument,
+  getDocument,
+  getDocuments,
+  uploadDocument,
+} from '../controllers/documentController.js';
 import protect from '../middleware/auth.js';
 
 const router = express.Router();

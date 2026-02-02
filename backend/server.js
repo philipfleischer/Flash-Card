@@ -12,6 +12,7 @@ import aiRoutes from './routes/aiRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
 import flashcardRoutes from './routes/flashcardRoutes.js';
+import progressRoutes from './routes/progressRoutes.js';
 import quizRoutes from './routes/quizRoutes.js';
 
 // ES6 module __dirname alternative
@@ -46,6 +47,7 @@ app.use('/api/documents', documentRoutes);
 app.use('/api/flashcards', flashcardRoutes);
 app.use('/api/aiRoutes', aiRoutes);
 app.use('/api/quizzes', quizRoutes);
+app.use('/api/progress', progressRoutes);
 
 app.use(errorHandler);
 

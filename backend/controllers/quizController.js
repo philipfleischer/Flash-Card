@@ -1,4 +1,4 @@
-import Quiz from '../models/Quiz';
+import Quiz from '../models/Quiz.js';
 
 // @desc    Get all quizzes for a document
 // @route   GET /api/quizzes/:documentId

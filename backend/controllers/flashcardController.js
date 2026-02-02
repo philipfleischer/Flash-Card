@@ -1,7 +1,7 @@
 // @desc    Get all flashcards for a document
 // @route   GET /api/flashcards/:documentId
 
-import Flashcard from '../models/Flashcard';
+import Flashcard from '../models/Flashcard.js';
 
 // @access  Private
 export const getFlashcards = async (req, res, next) => {

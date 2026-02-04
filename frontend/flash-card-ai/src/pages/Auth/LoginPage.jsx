@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [focusedField, setFocusedField] = useState(null);
 
   const navigate = useNavigate();
-  const { loging } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -109,7 +109,7 @@ const LoginPage = () => {
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? (
                   <>
-                    <div classname="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Signing in...
                   </>
                 ) : (
@@ -138,6 +138,7 @@ const LoginPage = () => {
             </p>
           </div>
         </div>
+
         {/* Subtle footer text */}
         <p className="text-center text-xs text-slate-400 mt-6">
           By continuing, you agree to our Terms & Privacy Policy

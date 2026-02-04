@@ -94,12 +94,12 @@ export const login = async (req, res, next) => {
     }
 
     // Generate token
-    const roken = generateToken(user._id);
+    const token = generateToken(user._id);
 
     res.status(200).json({
       success: true,
       user: {
-        is: user._id,
+        id: user._id,
         username: user.username,
         email: user.email,
         profileImage: user.profileImage,

@@ -1,6 +1,5 @@
 # Flash-Card
 
-2:45:23
 Full-Stack MERN application for flash cards, this is both for academic and industrial purposes
 
 ### Description DELETE THIS

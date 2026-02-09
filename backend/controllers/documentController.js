@@ -1,10 +1,17 @@
 import fs from 'fs/promises';
 import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 import Document from '../models/Document.js';
 import Flashcard from '../models/Flashcard.js';
 import Quiz from '../models/Quiz.js';
 import { extractTextFromPDF } from '../utils/pdfParser.js';
 import { chunkText } from '../utils/textChunker.js';
+
+// ES module __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // @desc    Upload PDF document
 // @route   POST /api/documents/upload
@@ -19,11 +26,11 @@ export const uploadDocument = async (req, res, next) => {
       });
     }
 
-    const { title } = req.body;
+    const title = (req.body.title || '').trim();
 
     if (!title) {
       // Delete uploaded file if no title provided
-      await fs.unlink(req.file.path);
+      await fs.unlink(req.file.path).catch(() => {});
       return res.status(400).json({
         success: false,
         error: 'Please provide a document title',
@@ -39,9 +46,10 @@ export const uploadDocument = async (req, res, next) => {
     const document = await Document.create({
       userId: req.user._id,
       title,
-      filename: req.file.originalname,
-      filaPath: fileUrl, // Store the UTL instead of the local path
-      fileSize: req.file.size,
+      fileName: req.file.filename, // ✅ MUST match schema (required)
+      filePath: fileUrl, // ✅ MUST match schema (required)
+      extractedText: '',
+      chunks: [],
       status: 'processing',
     });
 
@@ -65,15 +73,15 @@ export const uploadDocument = async (req, res, next) => {
 };
 
 // Helper function to process a PDF
-const processPDF = async (documentId, filePath) => {
+const processPDF = async (documentId, localFilePath) => {
   try {
-    const { text } = await extractTextFromPDF(filePath);
+    const { text } = await extractTextFromPDF(localFilePath);
 
     // Create chunks
     const chunks = chunkText(text, 500, 50);
 
     // Update document
-    await Document.findByInAndUpdate(documentId, {
+    await Document.findByIdAndUpdate(documentId, {
       extractedText: text,
       chunks: chunks,
       status: 'ready',
@@ -83,13 +91,13 @@ const processPDF = async (documentId, filePath) => {
   } catch (error) {
     console.error(`Error processing document ${documentId}:`, error);
 
-    await Document.findByInAndUpdate(documentId, {
+    await Document.findByIdAndUpdate(documentId, {
       status: 'failed',
     });
   }
 };
 
-// @desc    Get all user document
+// @desc    Get all user documents
 // @route   GET /api/documents
 // @access  Private
 export const getDocuments = async (req, res, next) => {
@@ -148,7 +156,7 @@ export const getDocuments = async (req, res, next) => {
 // @access  Private
 export const getDocument = async (req, res, next) => {
   try {
-    const document = await DocumentTimeline.findOne({
+    const document = await Document.findOne({
       _id: req.params.id,
       userId: req.user._id,
     });
@@ -166,7 +174,10 @@ export const getDocument = async (req, res, next) => {
       documentId: document._id,
       userId: req.user._id,
     });
-    const quizCount = await Quiz.countDocuments({ documentId: document._id, userId: req.user._id });
+    const quizCount = await Quiz.countDocuments({
+      documentId: document._id,
+      userId: req.user._id,
+    });
 
     // Update last accessed
     document.lastAccessed = Date.now();
@@ -204,10 +215,17 @@ export const deleteDocument = async (req, res, next) => {
       });
     }
 
-    // Delete file from filesystem
-    await fs.unlink(document.filePath).catch(() => {});
+    // document.filePath is a URL like: http://localhost:8000/uploads/documents/<file>
+    // Convert URL -> local filesystem path so fs.unlink works:
+    try {
+      const url = new URL(document.filePath);
+      const pathname = url.pathname; // /uploads/documents/<file>
+      const localPath = path.join(__dirname, '..', pathname); // backend/<uploads/...>
+      await fs.unlink(localPath);
+    } catch (_) {
+      // If parsing fails, just skip deleting file
+    }
 
-    // Delete document
     await document.deleteOne();
 
     res.status(200).json({

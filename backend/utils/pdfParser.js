@@ -1,8 +1,5 @@
 import fs from 'fs/promises';
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
-const { PDFParse } = require('pdf-parse');
+import { PDFParse } from 'pdf-parse';
 
 /**
  * Extract text from PDF file
@@ -13,10 +10,8 @@ export const extractTextFromPDF = async (filePath) => {
   try {
     const dataBuffer = await fs.readFile(filePath);
 
-    // PDFParse forventer Uint8Array
+    // PDFParse expects a Uint8Array
     const parser = new PDFParse(new Uint8Array(dataBuffer));
-
-    // I din pakke ser det ut som API'et er .getText()
     const data = await parser.getText();
 
     return {

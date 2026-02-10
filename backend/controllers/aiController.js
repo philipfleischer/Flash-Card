@@ -1,7 +1,12 @@
 import Document from '../models/Document.js';
 import Flashcard from '../models/Flashcard.js';
 import Quiz from '../models/Quiz.js';
-import * as geminiService from '../utils/textChunker.js';
+//import * as geminiService from '../utils/textChunker.js';
+
+//Ny:
+import { findRelevantChunks } from '../utils/textChunker.js';
+import * as geminiService from '../utils/geminiService.js';
+import ChatHistory from '../models/ChatHistory.js';
 
 // @desc    Generate flashcards from document
 // @route   POST /api/ai/generate-flashcards
@@ -194,13 +199,15 @@ export const chat = async (req, res, next) => {
     const chunkIndices = relevantChunks.map((c) => c.chunkIndex);
 
     // Get or create chat history
-    let chatHistory = await chatHistory.findOne({
+    //let chatHistory = await chatHistory.findOne({
+    let chatHistory = await ChatHistory.findOne({
       userId: req.user._id,
       documentId: document._id,
     });
 
     if (!chatHistory) {
-      chatHistory = await chatHistory.create({
+      //chatHistory = await chatHistory.create({
+      chatHistory = await ChatHistory.create({
         userId: req.user._id,
         documentId: document._id,
         messages: [],
@@ -208,7 +215,7 @@ export const chat = async (req, res, next) => {
     }
 
     // Generate response using Gemini
-    const answer = await geminiService.chatWitContext(question, relevantChunks);
+    const answer = await geminiService.chatWithContext(question, relevantChunks);
 
     // Save conversation
     chatHistory.messages.push(

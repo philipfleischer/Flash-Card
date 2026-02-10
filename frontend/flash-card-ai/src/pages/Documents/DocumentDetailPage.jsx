@@ -85,7 +85,13 @@ const DocumentDetailPage = () => {
   };
 
   const renderChat = () => {
-    return <ChatInterface />;
+    //return <ChatInterface />;
+    return (
+      <ChatInterface
+        documentStatus={document?.data?.status}
+        documentError={document?.data?.processingError}
+      />
+    );
   };
 
   const renderAIActions = () => {

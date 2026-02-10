@@ -53,6 +53,11 @@ const documentSchema = new mongoose.Schema(
       enum: ['processing', 'ready', 'failed'],
       default: 'processing',
     },
+    //NY
+    processingError: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

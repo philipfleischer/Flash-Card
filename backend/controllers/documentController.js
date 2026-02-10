@@ -51,6 +51,7 @@ export const uploadDocument = async (req, res, next) => {
       extractedText: '',
       chunks: [],
       status: 'processing',
+      processingError: '',
     });
 
     // Process PDF in background (in production, use a queue like Bull)
@@ -75,10 +76,18 @@ export const uploadDocument = async (req, res, next) => {
 // Helper function to process a PDF
 const processPDF = async (documentId, localFilePath) => {
   try {
+    //NY:
+    console.log('[processPDF] start', { documentId, localFilePath });
+
     const { text } = await extractTextFromPDF(localFilePath);
+
+    //NY:
+    console.log('[processPDF] extracted text length', text?.length ?? 0);
 
     // Create chunks
     const chunks = chunkText(text, 500, 50);
+
+    //NY: console.log('[processPDF] chunks', chunks.length);
 
     // Update document
     await Document.findByIdAndUpdate(documentId, {
@@ -87,13 +96,22 @@ const processPDF = async (documentId, localFilePath) => {
       status: 'ready',
     });
 
+    //NY:
+    console.log('[processPDF] set ready', documentId);
+
     console.log(`Document ${documentId} processed successfully`);
+    console.log('Processing PDF:', documentId, localFilePath);
   } catch (error) {
     console.error(`Error processing document ${documentId}:`, error);
 
     await Document.findByIdAndUpdate(documentId, {
       status: 'failed',
+      processingError: error?.message || String(error),
     });
+    console.error('processPDF failed:', error);
+
+    //NY:
+    console.log('[processPDF] set failed', documentId);
   }
 };
 

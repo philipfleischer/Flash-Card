@@ -8,14 +8,19 @@ import {
 } from '../controllers/flashcardController.js';
 import protect from '../middleware/auth.js';
 
+console.log('flashcardRoutes loaded');
+
 const router = express.Router();
 
 router.use(protect);
 
 router.get('/', getAllFlashcardSets);
+
+router.put('/:cardId/review', reviewFlashcard);
+router.put('/:cardId/star', toggleStarFlashcard);
+
+router.delete('/:id', deleteFlashcardSet);
+
 router.get('/:documentId', getFlashcards);
-router.get('/:cardId/review', reviewFlashcard);
-router.get('/:cardId/star', toggleStarFlashcard);
-router.get('/:id', deleteFlashcardSet);
 
 export default router;

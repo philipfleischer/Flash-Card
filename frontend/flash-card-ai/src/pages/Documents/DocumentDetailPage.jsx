@@ -7,6 +7,9 @@ import documentService from '../../services/documentService';
 import PageHeader from '../../components/common/PageHeader';
 import Tabs from '../../components/common/Tabs';
 import ChatInterface from '../../components/chat/ChatInterface';
+import AIActions from '../../components/ai/AIActions';
+import FlashcardManager from '../../components/flashcards/FlashcardManager';
+import QuizManager from '../../components/quizzes/QuizManager';
 
 const DocumentDetailPage = () => {
   const { id } = useParams();
@@ -85,7 +88,6 @@ const DocumentDetailPage = () => {
   };
 
   const renderChat = () => {
-    //return <ChatInterface />;
     return (
       <ChatInterface
         documentStatus={document?.data?.status}
@@ -95,15 +97,15 @@ const DocumentDetailPage = () => {
   };
 
   const renderAIActions = () => {
-    return 'renderAIActions';
+    return <AIActions />;
   };
 
   const renderFlashcardsTab = () => {
-    return 'renderFlashcardsTab';
+    return <FlashcardManager documentId={id} />;
   };
 
   const renderQuizzesTab = () => {
-    return 'renderQuizzesTab';
+    return <QuizManager documentId={id} />;
   };
 
   const tabs = [

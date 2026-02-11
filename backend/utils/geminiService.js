@@ -62,7 +62,7 @@ export const generateFlashcards = async (text, count = 10) => {
         }
       }
 
-      if (quesion && answer) {
+      if (question && answer) {
         flashcards.push({ question, answer, difficulty });
       }
     }

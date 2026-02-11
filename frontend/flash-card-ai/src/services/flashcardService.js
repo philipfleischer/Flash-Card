@@ -23,7 +23,7 @@ const getFlashcardsForDocument = async (documentId) => {
 
 const reviewFlashcard = async (cardId, cardIndex) => {
   try {
-    const response = await axiosInstance.post(API_PATHS.FLASHCARDS.REVIEW_FLASCARD(cardId), {
+    const response = await axiosInstance.put(API_PATHS.FLASHCARDS.REVIEW_FLASCARD(cardId), {
       cardIndex,
     });
     return response.data;

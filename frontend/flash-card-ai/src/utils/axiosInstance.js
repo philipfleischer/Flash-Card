@@ -26,17 +26,36 @@ axiosInstance.interceptors.request.use(
 
 // Response Interceptor
 axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
-    if (error.response) {
-      if (error.response.status === 500) {
-        console.error('Server error. Please try again later.');
+    const status = error?.response?.status;
+    const apiError = error?.response?.data?.error;
+
+    // 401 = token er utløpt/ugyldig => rydd opp og send til login
+    if (status === 401) {
+      // Unngå endeløs loop hvis du allerede er på /login:
+      const onLoginPage = window.location.pathname.startsWith('/login');
+
+      // Fjern token så neste request ikke sender garbage
+      localStorage.removeItem('token');
+
+      // (valgfritt) hvis du lagrer user/profil lokalt:
+      // localStorage.removeItem('user');
+
+      // Valgfritt: logg litt for debugging
+      console.warn('Unauthorized (401):', apiError || 'Token invalid/expired');
+
+      if (!onLoginPage) {
+        window.location.href = '/login';
       }
+    }
+
+    if (status === 500) {
+      console.error('Server error. Please try again later.');
     } else if (error.code === 'ECONNABORTED') {
       console.error('Request timeout. Please try again.');
     }
+
     return Promise.reject(error);
   },
 );

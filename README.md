@@ -1,74 +1,172 @@
-# Flash-Card
+# Flash-Card — AI Learning Assistant (MERN + Gemini)
 
-Full-Stack MERN application for flash cards, this is both for academic and industrial purposes
+A full-stack learning assistant that turns PDFs into interactive study material: **AI chat**, **summaries**, **concept explanations**, **auto-generated flashcards**, and **quizzes with results analytics** — wrapped in a clean, responsive UI.
 
-## To run
+Built as a portfolio project to demonstrate end-to-end product development: authentication, file handling, API design, database modeling, AI integration, and a production-style frontend.
 
-navigate to frontend and backend and write in both terminals:
-**npm run dev**
+---
 
-### Description DELETE THIS
+## Key Features
 
-In this video, we'll build a Full-Stack AI Learning Assistant App using the MERN (MongoDB, Express, React, Node.js) stack, styled with Tailwind CSS, and powered by Google Gemini AI. This app transforms PDFs into interactive study experiences with AI chat, auto-generated flashcards, quizzes, summaries, and progress tracking — all in one place.
+### Documents
 
-Functionalities Implemented:
+- Upload and manage PDF study documents (metadata + file size tracking)
+- Embedded in-app PDF viewer
 
-1. User Authentication – Secure login & signup with JWT
-2. PDF Upload & Management – Upload, store, and manage study documents with file size tracking
-3. Embedded PDF Viewer – Read documents directly within the app without leaving the platform
-4. AI-Powered Chat – Ask questions about your documents with context-aware AI responses using Google Gemini
-5. AI Document Summary – Generate concise summaries of entire documents with one click
-6. AI Concept Explainer – Get detailed explanations of specific topics from your documents
-7. Auto-Generated Flashcards – Create flashcard sets automatically from document content with flip animation
-8. AI Quiz Generator – Generate custom multiple-choice quizzes with configurable question counts
-9. Quiz Results & Analytics – View detailed score breakdowns with correct answers and explanations
-10. Progress Tracking Dashboard – Monitor total documents, flashcards, and quizzes with recent activity feed
-11. Favorites System – Mark important flashcards for quick review
-12. Responsive UI – Modern, mobile-friendly design built with Tailwind CSS
+### AI Study Tools (Google Gemini)
 
-00:00 Demo of AI Learning Assistant App
+- Context-aware chat about document content
+- One-click document summaries
+- Topic/concept explainer based on the document
 
-Frontend Setup
-10:16 Creating and Setting Up React App
-11:00 Configuring Tailwind CSS v4.1
-12:28 Creating Project Structure (Files & Folders)
-15:49 Defining App Routes
+### Flashcards
 
-Backend Development
-20:25 Backend Setup & Project Structure
-27:22 Connecting to MongoDB
-30:42 Building Authentication APIs (Login, Register, Get Profile, Update Password)
-35:18 Creating Database Schemas (User, Document, Flashcard, Quiz, ChatHistory)
-56:04 Building Document APIs (Upload, Get, Delete)
-01:14:53 Building Flashcard APIs (Get, Review, Toggle Favorite, Delete)
-01:23:25 Building AI APIs (Generate Flashcards, Generate Quiz, Generate Summary, AI Chat, Explain Concept, Get Chat History)
-01:49:50 Building Quiz APIs (Get All, Get By ID, Submit, Get Results, Delete)
-02:01:39 Building Dashboard Overview API
+- Auto-generated flashcard sets from document content
+- Review tracking (last reviewed + review count)
+- Star/favorite system for important cards
+- Flip-card UX + dedicated flashcards page
 
-Frontend Development (Continued)
-02:09:05 Defining API Services
+### Quizzes
 
-Authentication Pages
-02:18:31 Login Page
-02:30:42 Register Page
+- Generate multiple-choice quizzes with configurable number of questions
+- Take quizzes with progress UI and navigation
+- Detailed results view (score breakdown, correct answers, explanations)
 
-Main Application
-02:46:35 Dashboard Page
-03:12:20 Document Listing Page
-03:21:51 Document Card Component
-03:32:09 Upload Document Modal
-03:45:15 Document Details Page
-03:56:57 AI Chat Interface
-04:16:20 AI Actions Tab (Summary & Explain Concept)
-04:32:52 Flashcards Tab
-04:53:44 Flashcard Viewer Component
-05:07:24 Quizzes Tab
-05:30:28 Quiz Take Page
-05:48:47 Quiz Result Page
-06:08:21 Flashcard Listing Page
-06:30:28 Profile Page
+### Dashboard
 
-### Acknowledgment
+- Progress overview (documents, flashcards, quizzes)
+- Recent activity & learning stats
 
-Used this as inspiration:
-https://www.youtube.com/watch?v=iaAdWmAu0TE
+### Auth + Profile
+
+- JWT-based authentication (register/login)
+- Protected routes
+- Profile management
+
+---
+
+## Tech Stack
+
+**Frontend**
+
+- React + React Router
+- Tailwind CSS
+- Axios
+- React Hot Toast
+- Lucide Icons
+
+**Backend**
+
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT Authentication
+- Multer (file uploads)
+- Google Gemini API integration
+
+---
+
+## Project Structure (high level)
+
+Flash-Card/
+backend/ # Express API, MongoDB models, auth, AI endpoints
+frontend/ # React app, UI components, pages, services
+
+---
+
+## Getting Started (Local)
+
+### 1) Clone and install
+
+```bash
+git clone <your-repo-url>
+cd Flash-Card
+
+cd backend && npm install
+cd ../frontend && npm install
+```
+
+### 2) Environment variables
+
+Create backend/.env:
+NODE_ENV=development
+PORT=8000
+
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+
+GEMINI_API_KEY=your_google_gemini_api_key
+
+Notes:
+
+- MONGO_URI should point to a MongoDB Atlas cluster or local MongoDB instance.
+- JWT_SECRET should be long and random.
+
+### 3) Run the app
+
+In two terminals:
+Terminal 1:
+cd backend
+npm run dev
+
+Terminal 2:
+cd frontend
+npm run dev
+
+Frontend typically runs on http://localhost:5173 and backend on http://localhost:8000.
+
+⸻
+
+## API Overview (selected)
+
+- POST /api/auth/register — register
+- POST /api/auth/login — login
+- GET /api/documents — list documents
+- POST /api/documents/upload — upload pdf
+- GET /api/flashcards/:documentId — flashcards for doc
+- GET /api/quizzes/:documentId — quizzes for doc
+- GET /api/quizzes/quiz/:id — quiz by id
+- POST /api/quizzes/:id/submit — submit quiz
+- GET /api/quizzes/:id/results — quiz results
+- POST /api/ai/chat — ask questions about doc
+- POST /api/ai/summary — generate summary
+- POST /api/ai/explain — explain concept
+- POST /api/ai/flashcards — generate flashcards
+- POST /api/ai/quiz — generate quiz
+
+(Exact endpoints may vary slightly depending on your route files.)
+
+⸻
+
+## Security Notes
+
+- JWT tokens are required for protected routes.
+- Requests are scoped to userId on the backend to prevent cross-user access.
+- Recommended for production: rate limiting, input validation, stricter CORS config, and secure cookie/token storage strategy.
+
+⸻
+
+## What This Project Demonstrates
+
+- Full-stack MERN development with real product features
+- Database modeling (documents, quizzes, flashcards, user progress)
+- REST API design + protected endpoints
+- File upload pipeline + PDF-based workflows
+- AI feature integration with structured prompts and UI flows
+- Responsive UI and component-based frontend architecture
+
+⸻
+
+## Potential Improvements
+
+- Search + tagging for documents and flashcards
+- Spaced repetition scheduling (SM-2 / Leitner)
+- Test suite (unit + integration, API + UI)
+- Background jobs for heavy AI generation and retry logic
+- Better analytics (streaks, weak topics, time spent)
+
+⸻
+
+## Acknowledgements
+
+Inspired by the general idea of an “AI learning assistant” workflow.
+Original inspiration: https://www.youtube.com/watch?v=iaAdWmAu0TE

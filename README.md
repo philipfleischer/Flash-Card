@@ -45,6 +45,11 @@ Built as a portfolio project to demonstrate end-to-end product development: auth
 
 ---
 
+## Live Demo
+https://github.com/user-attachments/assets/6d8aeafe-8ffd-4e9d-820c-ddb5c64a5fc3
+
+---
+
 ## Tech Stack
 
 **Frontend**

@@ -2,6 +2,11 @@
 
 Full-Stack MERN application for flash cards, this is both for academic and industrial purposes
 
+## To run
+
+navigate to frontend and backend and write in both terminals:
+**npm run dev**
+
 ### Description DELETE THIS
 
 In this video, we'll build a Full-Stack AI Learning Assistant App using the MERN (MongoDB, Express, React, Node.js) stack, styled with Tailwind CSS, and powered by Google Gemini AI. This app transforms PDFs into interactive study experiences with AI chat, auto-generated flashcards, quizzes, summaries, and progress tracking — all in one place.
@@ -62,3 +67,8 @@ Main Application
 05:48:47 Quiz Result Page
 06:08:21 Flashcard Listing Page
 06:30:28 Profile Page
+
+### Acknowledgment
+
+Used this as inspiration:
+https://www.youtube.com/watch?v=iaAdWmAu0TE

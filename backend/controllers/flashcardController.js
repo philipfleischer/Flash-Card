@@ -26,11 +26,26 @@ export const getFlashcards = async (req, res, next) => {
 // @desc    Get all flashcard sets for a user
 // @route   GET /api/flashcards/
 // @access  Private
+// export const getAllFlashcardSets = async (req, res, next) => {
+//   try {
+//     const flashcardSets = (
+//       await Flashcard.find({ userId: req.user._id }).populate('documentId', 'title')
+//     ).toSorted({ createdAt: -1 });
+
+//     res.status(200).json({
+//       success: true,
+//       count: flashcardSets.length,
+//       data: flashcardSets,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 export const getAllFlashcardSets = async (req, res, next) => {
   try {
-    const flashcardSets = (
-      await Flashcard.find({ userId: req.user._id }).populate('documentId', 'title')
-    ).toSorted({ createdAt: -1 });
+    const flashcardSets = await Flashcard.find({ userId: req.user._id })
+      .populate('documentId', 'title')
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -66,7 +81,8 @@ export const reviewFlashcard = async (req, res, next) => {
 
     if (cardIndex === -1) {
       return res.status(404).json({
-        success: true,
+        //success: true,
+        success: false,
         error: 'Card not found in set',
         statusCode: 404,
       });

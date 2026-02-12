@@ -27,8 +27,9 @@ const FlashcardPage = () => {
 
     try {
       const response = await flashcardService.getFlashcardsForDocument(documentId);
-      setFlashcardSets(response.data[0]);
-      setFlashcard(response.data[0]?.cards || []);
+      const sets = response.data || [];
+      setFlashcardSets(sets[0] || null);
+      setFlashcard(sets[0]?.cards || []);
     } catch (error) {
       toast.error('Failed to fetch flashcards.');
       console.error(error);
@@ -57,16 +58,16 @@ const FlashcardPage = () => {
 
   const handleNextCard = () => {
     handleReview(currentCardIndex);
-    setCurrentCardIndex((prevIndex) => (prevIndex + 1) % flashcards.length);
+    setCurrentCardIndex((prevIndex) => (prevIndex + 1) % flashcard.length);
   };
 
   const handlePrevCard = () => {
     handleReview(currentCardIndex);
-    setCurrentCardIndex((prevIndex) => (prevIndex - 1 + flashcards.length) % flashcards.length);
+    setCurrentCardIndex((prevIndex) => (prevIndex - 1 + flashcard.length) % flashcard.length);
   };
 
   const handleReview = async (index) => {
-    const currentCard = flashcards[currentCardIndex];
+    const currentCard = flashcard[currentCardIndex];
     if (!currentCard) {
       return;
     }
@@ -79,13 +80,25 @@ const FlashcardPage = () => {
     }
   };
 
+  // const handleToggleStar = async (cardId) => {
+  //   try {
+  //     await flashcardService.toggleStar(cardId);
+  //     setFlashcardSets((prevFlashcards) =>
+  //       prevFlashcards.map((card) =>
+  //         card._id === cardId ? { ...card, isStarred: !card.isStarred } : card,
+  //       ),
+  //     );
+  //     toast.success('Flashcard starred status updated!');
+  //   } catch (error) {
+  //     toast.error('Failed to update star status.');
+  //   }
+  // };
+
   const handleToggleStar = async (cardId) => {
     try {
       await flashcardService.toggleStar(cardId);
-      setFlashcardSets((prevFlashcards) =>
-        prevFlashcards.map((card) =>
-          card._id === cardId ? { ...card, isStarred: !card.isStarred } : card,
-        ),
+      setFlashcard((prev) =>
+        prev.map((card) => (card._id === cardId ? { ...card, isStarred: !card.isStarred } : card)),
       );
       toast.success('Flashcard starred status updated!');
     } catch (error) {
@@ -113,7 +126,7 @@ const FlashcardPage = () => {
       return <Spinner />;
     }
 
-    if (flashcards.length === 0) {
+    if (flashcard.length === 0) {
       return (
         <EmptyState
           title="No Flashcards Yet"
@@ -122,7 +135,7 @@ const FlashcardPage = () => {
       );
     }
 
-    const currentCard = flashcards[currentCardIndex];
+    const currentCard = flashcard[currentCardIndex];
 
     return (
       <div className="flex flex-col items-center space-y-6">
@@ -130,13 +143,13 @@ const FlashcardPage = () => {
           <Flashcard flashcard={currentCard} onToggleStar={handleToggleStar} />
         </div>
         <div className="flex items-center gap-4">
-          <Button onClick={handlePrevCard} variant="secondary" disabled={flashcards.length <= 1}>
+          <Button onClick={handlePrevCard} variant="secondary" disabled={flashcard.length <= 1}>
             <ChevronLeft size={16} /> Previous
           </Button>
           <span className="text-sm text-neutral-600">
-            {currentCardIndex + 1} / {flashcards.length}
+            {currentCardIndex + 1} / {flashcard.length}
           </span>
-          <Button onClick={handleNextCard} variant="secondary" disabled={flashcards.length <= 1}>
+          <Button onClick={handleNextCard} variant="secondary" disabled={flashcard.length <= 1}>
             Next <ChevronRight size={16} />
           </Button>
         </div>
@@ -158,7 +171,7 @@ const FlashcardPage = () => {
       <PageHeader title="Flashcards">
         <div className="flex gap-2">
           {!loading &&
-            (flashcards.length > 0 ? (
+            (flashcard.length > 0 ? (
               <>
                 <Button onClick={() => setIsDeletingModalOpen(true)} disabled={deleting}>
                   <Trash2 size={16} /> Delete set

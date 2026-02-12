@@ -94,7 +94,8 @@ export const submitQuiz = async (req, res, next) => {
 
       if (questionIndex < quiz.questions.length) {
         const questions = quiz.questions[questionIndex];
-        const isCorrect = selectedAnswer === questionIndex.correctAnswer;
+        // const isCorrect = selectedAnswer === questionIndex.correctAnswer;
+        const isCorrect = selectedAnswer === questions.correctAnswer;
 
         if (isCorrect) correctCount++;
 
@@ -108,7 +109,9 @@ export const submitQuiz = async (req, res, next) => {
     });
 
     // Calculate score
-    const score = Math.round((correctCount / quiz.totalQuestions) * 100);
+    const total = quiz.questions.length;
+    const score = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+    quiz.totalQuestions = total;
 
     // update quiz
     quiz.userAnswers = userAnswers;
@@ -166,7 +169,9 @@ export const getQuizResults = async (req, res, next) => {
 
       return {
         questionIndex: index,
-        question: question.options,
+        // question: question.options,
+        question: question.question,
+        options: question.options,
         correctAnswer: question.correctAnswer,
         selectedAnswer: userAnswer?.selectedAnswer || null,
         isCorrect: userAnswer?.isCorrect || false,

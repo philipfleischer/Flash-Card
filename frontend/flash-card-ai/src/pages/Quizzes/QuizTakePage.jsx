@@ -21,7 +21,8 @@ const QuizTakePage = () => {
     const fetchQuiz = async () => {
       try {
         const response = await quizService.getQuizById(quizId);
-        setQuiz(response.data);
+        //setQuiz(response.data);
+        setQuiz(response.data?.data ?? response.data);
       } catch (error) {
         toast.error('Failed to fetch quiz.');
         console.error(error);
@@ -131,7 +132,7 @@ const QuizTakePage = () => {
 
         {/* Options */}
         <div className="space-y-3">
-          {currentQuestion.options.mao((option, index) => {
+          {currentQuestion.options.map((option, index) => {
             const isSelected = selectedAnswers[currentQuestion._id] === index;
             return (
               <label
@@ -213,7 +214,8 @@ const QuizTakePage = () => {
         ) : (
           <Button onClick={handleNextQuestion} disabled={submitting}>
             Next
-            <ChevronLeft
+            {/* <ChevronLeft */}
+            <ChevronRight
               className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200"
               strokeWidth={2.5}
             />
